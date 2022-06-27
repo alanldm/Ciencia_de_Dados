@@ -13,10 +13,10 @@ def empresa(dados):
     top10 = empresas.groupby("manufacturer").count()
     top10 = top10[top10.occurrence_id>=34] #Filtrando para ficar apenas com as 10 empresas com mais acidentes.
     top10.reset_index(inplace=True) #Reorganizando os índices.
-    top10.rename(columns={"manufacturer":"Empresas","occurrence_id":"Quantidades"}, inplace=True) #Renomeando as colunas.
-    top10.sort_values(by="Quantidades", inplace=True, ascending=False) #Ordenando as empresas.
-
-    fig = px.bar(top10, x=["Neiva", "Cessna", "Piper", "Embraer", "Aero", "Beech", "Robinson", "Bell", "Helibras", "Boeing"], y="Quantidades")
+    top10.rename(columns={"manufacturer":"Empresas","occurrence_id":"Quantidade"}, inplace=True) #Renomeando as colunas.
+    top10.sort_values(by="Quantidade", inplace=True, ascending=False) #Ordenando as empresas.
+    top10["Empresa"] = ["Neiva", "Cessna", "Piper", "Embraer", "Aero", "Beech", "Robinson", "Bell", "Helibras", "Boeing"]
+    fig = px.bar(top10, x="Empresa", y="Quantidade", title="Top 10 empresas com mais acidentes registrados", color='Quantidade')
     st.plotly_chart(fig)
 
 def mostra_graficos_empresas(dados):

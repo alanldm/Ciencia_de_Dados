@@ -15,9 +15,9 @@ def periodo(dados):
     periodo.Hora[periodo.Hora!="Dia"] = "Noite"  #Indicando quais horários representam a noite.
     periodo = periodo.groupby("Hora").count() #Agrupando os dados com base na hora.
     periodo.reset_index(inplace=True) #Reorganizando os índices.  
-    periodo.rename(columns={"Hora":"Período", "time":"Quantidades"}, inplace=True) #Mudando o nome das colunas.
+    periodo.rename(columns={"Hora":"Período", "time":"Quantidade"}, inplace=True) #Mudando o nome das colunas.
 
-    fig = px.pie(periodo, values="Quantidades", names="Período", title="Quantidade de acidentes por período do dia")
+    fig = px.pie(periodo, values="Quantidade", names="Período", title="Quantidade de acidentes por período do dia", color="Período", color_discrete_map={'Dia':'yellow', "Noite":"Black"})
     st.plotly_chart(fig)
 
 def anos(dados):
@@ -35,9 +35,9 @@ def anos(dados):
     anos_acidente = idade.groupby("occurrence_year").count() #Criando um dataframe a partir dos dados agrupados dos anos.
     anos_acidente.reset_index(inplace=True) #Reorganizando os índices.
     anos_acidente.drop(columns=["year_manufacture", "occurrence_day", "occurrence_month"], inplace=True) #Deixando apenas a coluna dos anos.
-    anos_acidente.rename(columns={"occurrence_year":"Anos", "age":"Quantidades"}, inplace=True) #Renomeando as colunas.
+    anos_acidente.rename(columns={"occurrence_year":"Ano", "age":"Quantidade"}, inplace=True) #Renomeando as colunas.
 
-    fig = px.bar(anos_acidente, x="Anos", y="Quantidades")
+    fig = px.bar(anos_acidente, x="Ano", y="Quantidade", title="Anos com mais acidentes", color="Quantidade", color_continuous_scale="Reds")
     st.plotly_chart(fig)
 
 def idade(dados):
@@ -52,16 +52,22 @@ def idade(dados):
     idade['age'] = idade['occurrence_year'] - idade['year_manufacture'] #Calculando a idade das aeronaves.
     idade = idade[idade.year_manufacture!=0]
     idade = idade[idade.age>=0]
-
-    fig = px.histogram(idade, x="age", nbins=10)
+    idade.rename(columns={"age":"Idade"}, inplace=True)
+    fig = px.histogram(idade, x="Idade", nbins=10, title="Idades das aeronaves acidentadas", opacity=0.4, color_discrete_sequence=['green'], log_y=True)
     st.plotly_chart(fig)
 
     idade = idade.sort_values(by="occurrence_month")
 
-    fig = px.histogram(idade, x="occurrence_month", nbins=10)
+    idade.rename(columns={"occurrence_month":"Mês"}, inplace=True)
+    fig = px.histogram(idade, x="Mês", nbins=10, color_discrete_sequence=['darkcyan'], title="Meses com mais acidentes")
     st.plotly_chart(fig)
 
 def mostra_graficos_temporais(dados):
-    periodo(dados)
-    anos(dados)
-    idade(dados)
+    col1, col2 = st.columns(2)
+
+    with col1:
+        periodo(dados)
+        anos(dados)
+
+    with col2:
+        idade(dados)

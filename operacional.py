@@ -15,8 +15,7 @@ def funcao(dados):
 
     #Criando um vetor para armazenar os valores verdadeiros e falsos.
     qtd = [funcao.function[funcao.function==True].count(), funcao.function[funcao.function==False].count()]
-    
-    fig = px.pie(values=qtd, names=["Iguais", "Diferentes"], title="Comparação entre os tipos de registro e de operação")
+    fig = px.pie(values=qtd, names=["Iguais", "Diferentes"], title="Aeronaves acidentadas e registros de operação")
     st.plotly_chart(fig)
 
 def estagio(dados):
@@ -32,11 +31,11 @@ def estagio(dados):
     fase.reset_index(inplace=True) #Reorganizando os índices.
 
     #Renomeando as colunas do dataframe.
-    fase.rename(columns={"operation_phase":"Fase", "occurrence_id":"Quantidades"}, inplace=True)
-    fase = fase[fase.Quantidades>100] #Filtrando para manter apenas os Top 5 momentos com mais acidentes.
-    fase.sort_values(by="Quantidades", inplace=True, ascending=True) #Ordenando os dados.
+    fase.rename(columns={"operation_phase":"Fase", "occurrence_id":"Quantidade"}, inplace=True)
+    fase = fase[fase.Quantidade>100] #Filtrando para manter apenas os Top 5 momentos com mais acidentes.
+    fase.sort_values(by="Quantidade", inplace=True, ascending=True) #Ordenando os dados.
 
-    fig = px.bar(fase, x="Fase", y="Quantidades")
+    fig = px.bar(fase, x="Fase", y="Quantidade", color="Quantidade", color_continuous_scale="Peach", title="Etapas com mais registros de acidentes")
     st.plotly_chart(fig)
 
 def mostra_graficos_operacional(dados):

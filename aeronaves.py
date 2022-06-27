@@ -10,11 +10,11 @@ def models(dados):
     modelos = modelos[modelos.model!="***"] #Filtrando os dados inconsistentes.
     modelos = modelos.groupby("model").count() #Agrupando os valores a partir da coluna de modelos.
     modelos.reset_index(inplace=True) #Reorganizando os índices.
-    modelos.rename(columns={"model":"Modelos", "occurrence_id":"Quantidades"}, inplace=True) #Trocando o nome das colunas.
-    modelos = modelos[modelos.Quantidades>=30] #Filtrando os dados para pegar apenas os 11 com mais acidentes.
-    modelos.sort_values(by="Quantidades", inplace=True, ascending=True) #Ordenando os dados.
+    modelos.rename(columns={"model":"Modelo", "occurrence_id":"Quantidade"}, inplace=True) #Trocando o nome das colunas.
+    modelos = modelos[modelos.Quantidade>=30] #Filtrando os dados para pegar apenas os 11 com mais acidentes.
+    modelos.sort_values(by="Quantidade", inplace=True, ascending=True) #Ordenando os dados.
 
-    fig = px.bar(modelos, x="Modelos", y="Quantidades")
+    fig = px.bar(modelos, x="Modelo", y="Quantidade", color="Quantidade", color_continuous_scale="Reds", title="Modelos de aeronaves com mais acidentes")
     st.plotly_chart(fig)
 
 def motors(dados):
@@ -22,10 +22,10 @@ def motors(dados):
     motores.dropna(inplace=True) #Removendo as linhas nulas.
     motores = motores.groupby("engines_amount").count() #Contando o número de acidentes pela quantidade de motores.
     motores.reset_index(inplace=True) #Reorganizando os índices.
-    motores.rename(columns={"engines_amount":"Motores", "occurrence_id":"Quantidades"}, inplace=True) #Trocando o nome das colunas.
-    motores.sort_values(by="Quantidades", inplace=True, ascending=True) #Ordenando os dados.
+    motores.rename(columns={"engines_amount":"Motores", "occurrence_id":"Quantidade"}, inplace=True) #Trocando o nome das colunas.
+    motores.sort_values(by="Quantidade", inplace=True, ascending=True) #Ordenando os dados.
 
-    fig = px.bar(motores, x="Motores", y="Quantidades")
+    fig = px.bar(motores, x="Motores", y="Quantidade", title="Quantidade de motores em aeronaves acidentadas", color="Quantidade")
     st.plotly_chart(fig)
 
 def types(dados):
@@ -39,8 +39,9 @@ def types(dados):
     x.reset_index(inplace=True) #Reorganizando os índices.
     x = x.append({"equipment":"Outros", "occurrence_id":19}, ignore_index=True)
     x = x[x.occurrence_id>=19]
-
-    fig = px.pie(x, values="occurrence_id", names=["Avião", "Helicóptero", "Ultraleve", "Outros"], title="Tipos de aeronaves acidentadas")
+    x["Aeronave"] = ["Avião", "Helicóptero", "Ultraleve", "Outros"]
+    x.rename(columns={"occurrence_id":"Quantidade"}, inplace=True)
+    fig = px.pie(x, values="Quantidade", names="Aeronave", title="Tipos de aeronaves acidentadas", color_discrete_sequence=px.colors.sequential.Redor)
     st.plotly_chart(fig)
 
 def damage(dados):
@@ -49,13 +50,19 @@ def damage(dados):
     dano = dano[dano.damage_level!="UNKNOWN"] #Removendo dados inconsistentes.
     dano = dano.groupby("damage_level").count() #Agrupando os dados com base no nível do dano.
     dano.reset_index(inplace=True) #Reorganizando os índices do dataframe.
-    dano.rename(columns={"damage_level":"Danos", "occurrence_id":"Quantidades"}, inplace=True) #Renomeando as colunas do dataframe.
+    dano.rename(columns={"damage_level":"Danos", "occurrence_id":"Quantidade"}, inplace=True) #Renomeando as colunas do dataframe.
 
-    fig = px.pie(dano, values="Quantidades", names=["Destruído", "Leve", "Nenhum", "Substancial"], title="Gráfico de setores dos tipos de danos")
+    dano["Dano"] = ["Destruído", "Leve", "Nenhum", "Substancial"]
+    fig = px.pie(dano, values="Quantidade", names="Dano", title="Danos sofridos pelas aeronaves", color_discrete_sequence=px.colors.sequential.Magma)
     st.plotly_chart(fig)
 
 def mostra_graficos_aeronaves(dados):
-    types(dados)
-    damage(dados)
-    models(dados)
-    motors(dados)
+    col1, col2 = st.columns(2)
+
+    with col1:
+        types(dados)
+        models(dados)
+    
+    with col2:
+        motors(dados)
+        damage(dados)

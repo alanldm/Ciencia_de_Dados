@@ -53,7 +53,7 @@ def damage(dados):
     dano.rename(columns={"damage_level":"Danos", "occurrence_id":"Quantidade"}, inplace=True) #Renomeando as colunas do dataframe.
 
     dano["Dano"] = ["Destruído", "Leve", "Nenhum", "Substancial"]
-    fig = px.pie(dano, values="Quantidade", names="Dano", title="Danos sofridos pelas aeronaves", color_discrete_sequence=px.colors.sequential.Magma)
+    fig = px.pie(dano, values="Quantidade", names="Dano", title="Danos sofridos pelas aeronaves", color_discrete_sequence=px.colors.sequential.Peach)
     st.plotly_chart(fig)
 
 def mostra_graficos_aeronaves(dados):

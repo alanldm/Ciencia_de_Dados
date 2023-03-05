@@ -17,8 +17,6 @@ st.sidebar.image("ufrn-logo-5-599x192.png")
 escolha = st.sidebar.selectbox("Escolha uma categoria: ", ["Aeronaves", "Temporal", "Espacial", "Operacional", "Empresas"])
 st.sidebar.text('''Grupo:
 Alan Lima de Medeiros
-Enzo Hêndrio Gomes Araújo
-Kalynne Gabriele da Silva Maciel
 ''')
 #st.write(dados)
 

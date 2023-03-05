@@ -15,7 +15,7 @@ dados, Estados = tratamento.tratamento()
 
 st.sidebar.image("ufrn-logo-5-599x192.png")
 escolha = st.sidebar.selectbox("Escolha uma categoria: ", ["Aeronaves", "Temporal", "Espacial", "Operacional", "Empresas"])
-st.sidebar.text('''Grupo:
+st.sidebar.text('''Made By:
 Alan Lima de Medeiros
 ''')
 #st.write(dados)
